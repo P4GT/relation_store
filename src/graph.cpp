@@ -11,7 +11,6 @@ using std::string;
 using std::vector;
 
 bool Graph::add_edge(string edge_type, int src, int dest, int weight) {
-    auto edge = new Edge(edge_type, src, dest, weight);
     if (this->relations.find(src) == this->relations.end()) {
         this->relations[src] = {};
     }
@@ -30,14 +29,14 @@ Graph::SampleStepResult Graph::sampling_single_step(std::vector<int> &ids, std::
 
         auto edgeMap = it->second;
         auto pos = edgeMap.equal_range(label);
-        // check if all the elements is less than num
+        // check if the size of all the elements is less than or equal than num
         bool is_less = false;
         if (std::distance(pos.first, pos.second) <= num) {
             is_less = true;
         }
         switch (strategy) {
             case SampleStrategy::all: {
-                for (auto num_need = num; pos.first != pos.second && num_need != 0; ++pos.first, --num_need) {
+                for (auto num_need = num; pos.first != pos.second && num_need > 0; ++pos.first, --num_need) {
                     auto &edge = pos.first->second;
                     res.add_edge(edge);
                 }
